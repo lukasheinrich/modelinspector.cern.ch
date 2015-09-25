@@ -6,7 +6,7 @@ import yaml
 import IPython
 import click
 import os
-from lxml import etree
+from xml.etree import ElementTree as etree
 
 @click.group()
 def toplevel():
@@ -134,20 +134,20 @@ def parse_histfactory_xml(toplvlxml):
   histfithome = dirname.split('/config')[0]
   
   p = etree.parse(toplvlxml)
-  channels =  [etree.parse(open(get_path(histfithome,inpt.text))).xpath('/Channel')[0] for inpt in p.xpath('Input')]
+  channels =  [etree.parse(open(get_path(histfithome,inpt.text))).findall('.')[0] for inpt in p.findall('Input')]
 
   parsed_data = {
     'Combination':{
-      'Prefix':p.xpath('/Combination')[0].attrib['OutputFilePrefix'].split('./',1)[-1],
-      'Measurements':[ {'name':x.attrib['Name'] for x in p.xpath('Measurement')}]
+      'Prefix':p.findall('.')[0].attrib['OutputFilePrefix'].split('./',1)[-1],
+      'Measurements':[ {'name':x.attrib['Name'] for x in p.findall('Measurement')}]
     }
   }
 
   channel_info = []
-  for input_tag in p.xpath('Input'):
+  for input_tag in p.findall('Input'):
     channel_xml = etree.parse(open(get_path(histfithome,input_tag.text)))
-    channel_name = channel_xml.xpath('/Channel')[0].attrib['Name']
-    sample_names = [x.attrib['Name'] for x in channel_xml.xpath('Sample')]
+    channel_name = channel_xml.findall('.')[0].attrib['Name']
+    sample_names = [x.attrib['Name'] for x in channel_xml.findall('Sample')]
     channel_info += [{'name':channel_name,'samples':sample_names}]
 
   parsed_data['Combination']['Inputs'] = channel_info
