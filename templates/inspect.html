@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="/plot/{{id}}" method="post" enctype=multipart/form-data>
+    {% for k,v in vardef.iteritems() %}
+        {{k,v}}: 
+        <input type="range" name="par-{{k}}" step=0.1 min="{{v['min']}}" max="{{v['max']}}"
+            {% if parvals: %} value="{{parvals[k]}}" {% else %} value="{{v['defval']}}" {% endif %}>
+        <br/>
+    {% endfor %}
+
+    {% for channel_input in histfactory_info['Combination']['Inputs'] %}
+        <div class="checkbox">
+          <label>
+            <input name="channel-{{channel_input['name']}}"type="checkbox" value="{{channel_input['name']}}">{{channel_input['name']}}
+          </label>
+        </div>
+        <hr/>
+        {% for sample in channel_input['samples'] %}
+        <div class="checkbox">
+          <label>
+            <input name="sample_{{channel_input['name']}}_{{sample}}" type="checkbox" value="{{sample}}">{{sample}}
+          </label>
+        </div>
+        {% endfor %}
+    {% endfor %}
+        <button type="submit" class="btn btn-default">Draw</button>
+    </form>
+    
+    <form action="/fit/{{id}}" method="post" enctype=multipart/form-data>
+        <button type="submit" class="btn btn-default">Fit</button>
+    </form>
+    
+    </br>
+    <div>
+        {% for plot in plots %}
+            <img src={{plot}}></img>
+        {% endfor %}
+    </div>
+
+
+    
+{% endblock %}

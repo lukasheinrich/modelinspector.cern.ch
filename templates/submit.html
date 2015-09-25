@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/submission" method="post" enctype=multipart/form-data>
+    <div class="form-group">
+        <label for="XMLFile1">Top Level XML</label>
+        <input type="file" name="XMLFile1" id="XMLFile1">
+    </div>
+    <div class="form-group">
+        <label for="XMLFile1">Channel XML File</label>
+        <input type="file" name="XMLFile2" id="XMLFile2">
+    </div>
+    <div class="form-group">
+        <label for="ROOTFile1">Data File</label>
+        <input type="file" name="ROOTFile1" id="ROOTFile1">
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+</form>
+{% endblock %}
