@@ -1,8 +1,8 @@
-from flask import Flask,render_template, request, redirect, url_for, send_from_directory
+from flask import Flask,render_template, request, redirect, url_for, send_from_directory, flash
 
 app = Flask('modelinspector')
 app.debug = True
-
+app.secret_key = 'secret'
 import IPython
 import tempfile
 import os
@@ -39,6 +39,7 @@ def submission():
                          './histfactory_info.yaml'],
                          cwd = tmpdir)
 
+  flash('model loaded, happy inspecting.')
   return redirect(url_for('inspect',id = os.path.basename(tmpdir)))
   
 @app.route('/inspect/<id>')
@@ -91,6 +92,7 @@ def fit(id):
                          rootfile,
                          workspace,
                          parpointpath])
+  flash('model fitted. please redraw!')
   return redirect(url_for('inspect',id = id))
 
 
@@ -131,7 +133,7 @@ def plot(id):
                            ','.join(reversed(samples)),
                            parpointpath,
                            '-o',plotpath])
-
+  flash('plotted for given parameter values')
   return redirect(url_for('inspect',id = id))
   
 @app.route('/plotfile/<id>/<channel>')
